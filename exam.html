@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+<script>
+
+  // start ------ exam 1 ------
+
+  /*
+  (คะแนน 7%) Set เป็นโครงสร้างข้อมูลชนิดหนึ่งที่ออกแบบตามหลักของเซ็ตทางคณิตศาสตร์ โดยมีกระบวนการที่สำคัญดังนี้
+intersect ผมลัพธ์ที่ออกมาจะเป็น Set ใหม่ที่เกิดจากการหาส่วนที่เหมือนกันของ Set สองตัว
+union ผลลัพธ์ที่ได้จะเป็น Set ใหม่ที่เกิดจากการรวมค่าจาก Set ทั้งสองเข้าด้วยกัน
+differ ผลลัพธ์ที่ได้จะเป็น Set ใหม่ โดยที่ค่าของเซ็ตที่ออกมาจะมีเฉพาะสมาชิกใน Set แรกแต่ไม่รวมสมาชิกจาก Set หลัง
+สมบัติที่สำคัญของ Set คือสมาชิกภายในของ Set ต้องมีค่าไม่ซ้ำกัน นอกจากนี้ลำดับของข้อมูลภายใต้ Set ถือว่าไม่มีความสำคัญ Set ที่มีข้อมูลเหมือนกัน แต่สมาชิกอยู่ต่างลำดับ (index) กัน ถือว่าเป็น Set เดียวกันเสมอ
+
+จงสร้างคลาสสำหรับ Set พร้อมทั้งการดำเนินการภายใต้ Set ต่างๆผ่านเมธอดข้างต้น ทั้งนี้ทุกเมธอดต้องมีการดำเนินการภายใต้หลักของ Functional Programming
+
+const setA = new Set([1, 2, 3, 4, 5])
+const setB = new Set([2, 3, 7, 1])
+
+// setA และ setB มีสมาชิก 1, 2, 3 เช่นเดียวกัน
+setA.intersect(setB) // [1, 2, 3]
+
+// นำสมาชิกของทั้งสอง Set มารวมกัน
+// ทั้งนี้สมาชิกของ Set จะไม่มีตัวซ้ำกัน
+setA.union(setB) // [1, 2, 3, 4, 5, 7]
+
+// มีเพียง 4 และ 5 ที่มีใน setA แต่ไม่มีใน setB
+setA.differ(setB) // [4, 5]
+   */
+
+  class Set {
+    constructor(array) {
+      this._set = array;
+    }
+
+    intersect(set) {
+      const newSet = set.toArray();
+      return this._set.filter(item => newSet.includes(item))
+    }
+
+    union(set) {
+      return [...this._set, ...set.toArray()]
+        .reduce(
+          (result, item) =>
+            !result.includes(item)
+              ? [...result, item]
+              : result
+          , []
+        )
+    }
+
+    differ(set) {
+      return this._set.filter(item => !set.toArray().includes(item));
+    }
+
+    toArray() {
+      return this._set;
+    }
+  }
+
+  const setA = new Set([1, 2, 3, 4, 5]);
+  const setB = new Set([2, 3, 7, 1]);
+  console.log(setA.intersect(setB));
+  console.log(setA.union(setB));
+  console.log(setA.differ(setB));
+
+  // end ------ exam 1 ------
+
+
+  // start ------ exam 2 ------
+  // (คะแนน 7%) จงแปลง HTTP_STATUSES ต่อไปนี้ให้ได้ผลลัพธ์เป็น
+  const HTTP_STATUSES = {
+    100: 'CONTINUE',
+    200: 'OK',
+    201: 'CREATED',
+    302: 'FOUND',
+    401: 'UNAUTHORIZED',
+    500: 'INTERNAL SERVER ERROR',
+    501: 'NOT IMPLEMENTED'
+  };
+
+  console.log(
+    Object.entries(HTTP_STATUSES).map(([, msg]) => msg)
+  );
+  // end ------ exam 2 ------
+
+
+  // start ------ exam 3 ------
+  const date = '2017-09-28';
+  const [year, month, day] = date.split('-');
+  console.log(year, month, day);
+  // end ------ exam 3 ------
+
+
+  // start ------ exam 4 ------
+  const links = [
+    'https://www.babelcoder.com/blog/posts/typescript-classes',
+    'https://www.babelcoder.com/blog/posts/react-redux-isomorphic-day4-react-redux-isomorphic',
+    'https://www.babelcoder.com/blog/posts/create-react-app-with-no-configuration',
+    'https://www.babelcoder.com/blog/posts/angular2-angular-cli',
+    'https://www.babelcoder.com/blog/posts/typescript-data-types'
+  ];
+
+  console.log(
+    links.reduce(
+      (result, item) =>
+        [...result, item.slice(38)]
+      , [])
+  );
+
+  const ESCAPED_BASE_URL = 'https:\/\/www.babelcoder.com\/blog\/posts\/';
+  const REGEXP = new RegExp(`${ESCAPED_BASE_URL}([a-z-]+)`);
+  const slugs = links.reduce(
+    (result, item) =>
+      [...result, REGEXP.exec(item)[1]]
+    , []);
+  console.log(slugs);
+  // end ------ exam 4 ------
+
+
+  // start ------ exam 5 ------
+  //(คะแนน 3%) จงสร้างฟังก์ชันชื่อ isEmpty เพื่อตรวจสอบว่าอาร์เรย์ที่ส่งเข้ามาในฟังก์ชันเป็นเป็นอาร์เรย์ว่างหรือไม่ ทั้งนี้ห้ามใช้เมธอด length ของอาร์เรย์ในการเขียนโปรแกรม
+  const isEmpty = ([arr] = []) => arr === undefined;
+  console.log(isEmpty([])); // true
+  console.log(isEmpty()); // true
+  console.log(isEmpty([null])); // false
+  console.log(isEmpty([1, 2])); // false
+  // end ------ exam 5 ------
+
+
+  // start ------ exam 6 ------
+  const users = [
+    {id: 1, name: 'Somchai'},
+    {id: 2, name: 'Somsree'}
+  ];
+
+  // ดึงเอา id ออกมาจากแต่ละอ็อบเจ็กต์ในอาร์เรย์
+  // ได้ผลลัพธ์กลับออกมาเป็นอาร์เรย์
+  const pluck = (arr = [], key) => (
+    arr.map(a => a[key])
+  );
+  console.log(pluck(users, 'id')); // [1, 2]
+  // end ------ exam 6 ------
+
+
+  // start ------ exam 7 ------
+  //(คะแนน 5%) จงสร้างฟังก์ชัน findLongestWord เพื่อหาคำที่ยาวที่สุดออกมาเพียงตัวเดียวจากอาร์เรย์ของคำที่ส่งเข้ามาในโปรแกรม โดยใช้วิธีการของ functional programming
+  const findLongestWord = (arr = []) => (
+    arr.reduce(
+      (result, item) =>
+        item.length > result.length
+          ? item
+          : result
+      , '')
+  );
+
+  console.log(findLongestWord()); // null
+  console.log(findLongestWord([1, 2, 3])); // null
+  console.log(findLongestWord(['Somchai', 'Somsree', 'Somset', 'Somnumna'])); // Somnumna
+  console.log(findLongestWord(['Hi', 'Hello', 'World'])); // Hello
+  // end ------ exam 7 ------
+
+
+  // start ------ exam 8 ------
+  //(คะแนน 3%) จงสร้างฟังก์ชัน count เพื่อรับอาร์เรย์และสิ่งที่ต้องการค้นหาเข้ามา ใช้หลักการของ functional programming เพื่อคืนผลลัพธ์เป็นจำนวนของสิ่งที่ต้องการค้นหาที่หาพบในอาร์เรย์ (ไม่มีการค้นหาอ็อบเจ็กต์และอาร์เรย์ดังกล่าวไม่มีอ็อบเจ็กต์ซ้อนภายใน)
+  const count = (array, find) => (
+    array.filter(arr => arr === find).length
+  );
+
+  console.log(count([1, 2, 3, 4, 3, 5, 3], 3)); // 3
+  console.log(count(['hi', 'hello', 'hi'], 'hi')); // 2
+  // end ------ exam 8 ------
+
+
+  // start ------ exam 9 ------
+  //(คะแนน 5%) จงสร้างฟังก์ชันชื่อ delay เพื่อหน่วงเวลาในการปล่อยข้อความออกไปรูปแบบ Promise
+  function delay(time, message) {
+    // เมื่อเวลาผ่านไป time (หน่วยวินาที) จะส่งออก message เข้าสู่ then
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(message)
+      }, time * 1000)
+    })
+  }
+
+
+  // หลังเวลาผ่านไป 5 วินาที จะได้รับข้อความ Hello World
+  delay(5, 'Hello World')
+    .then(message => console.log(message));
+  // end ------ exam 9 ------
+
+
+  // start ------ exam 10 ------
+  //(คะแนน 5%) จงสร้างฟังก์ชัน countElement เพื่อนับจำนวนของสมาชิกในอาร์เรย์ที่เหมือนกัน
+  function countElement(array) {
+    let ele = {};
+    array.reduce(
+      (result, item) =>
+        typeof ele[item] === 'undefined'
+          ? ele[item] = 1
+          : ele[item] = ele[item] + 1
+      , {});
+    return ele;
+  }
+
+  console.log(countElement([1, 2, 3, 2, 1]))
+  // ได้ผลลัพธ์คือ
+  // {
+  //   1: 2, // มี 1 อยู่ทั้งหมด 2 ตัวในอาร์เรย์
+  //   2: 2, // มี 2 อยู่ทั้งหมด 2 ตัวในอาร์เรย์
+  //   3: 1  // มี 3 อยู่ทั้งหมด 1 ตัวในอาร์เรย์
+  // }
+  // end ------ exam 10 ------
+</script>
+</body>
+</html>

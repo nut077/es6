@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+<script>
+  // start ------ Closure ------
+  function setLastName(lastName) {
+    let count = 0;
+    return function setFirstName(firstName) {
+      return `${++count}. ${firstName} ${lastName}`
+    }
+  }
+
+  const freedomFamily = setLastName('Freedom');
+  console.log(`Closure --->>  ${freedomFamily('Eiei')}`);
+  // end ------ Closure ------
+
+
+  // start ------ Keyword this ------
+  const person = {
+    name: 'freedom',
+    printName() {
+      console.log(`Keyword this bind --->> ${this.name}`);
+    }
+  };
+  const printName = person.printName.bind(person);
+  printName();
+
+  function printOrders(count, attr) {
+    console.log(attr, count, this.name, this.model);
+  }
+
+  const canon = {
+    name: 'Canon',
+    model: 'Pixma MP250'
+  };
+
+  const hp = {
+    name: 'HP',
+    model: 'K7W99A'
+  };
+
+  printOrders.call(canon, 2, 'Keyword this call --->>');
+  printOrders.apply(hp, [2, 'Keyword this apply --->>']);
+  // end ------ Keyword this ------
+
+
+  // start ------ Lexical this ------
+  function Prefixer(prefix = '') {
+    this.prefix = prefix;
+  }
+
+  Prefixer.prototype.prefixArray = function (array = []) {
+    return array.map(item => {
+      return `Lexical this --->> ${this.prefix}${item}`
+    })
+  };
+
+  const prefixer = new Prefixer('Dr.');
+  const doctors = [
+    'Freedom',
+    'Eiei',
+  ];
+
+  console.log(prefixer.prefixArray(doctors));
+  // end ------ Lexical this ------
+
+
+  // start ------ Arrow function ------
+  const arrowFunction = a => a + 1;
+  console.log(`Arrow function --->> ${arrowFunction(2)}`);
+
+  const arrowFunctionMultipleLine = a => {
+    let b = a + 1;
+    b *= 2;
+    return b;
+  };
+
+  console.log(`Arrow function multiple line --->> ${arrowFunctionMultipleLine(2)}`);
+  // end ------ Arrow function ------
+
+
+  // start ------ Lab apply ------
+  const arrLabAppay = [9, 3, 5, 7];
+  console.log(`Lab apply min in array --->> ${Math.min.apply(null, arrLabAppay)}`);
+
+  const sumArrLab = arrLabAppay.reduce((result, number) => result + number, 0);
+  console.log(`Lab apply sum in array --->> ${sumArrLab}`);
+  // end ------ Lab apply ------
+
+
+  // start ------ Promise ------
+  const promise = new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve('Done')
+    }, 1000)
+  });
+
+  promise.then(function (result) {
+    console.log(`Promise resolve --->> ${result}`);
+  }).catch(function (error) {
+    console.log(`Promise reject --->> ${error}`);
+  });
+  // end ------ Promise ------
+
+
+  // start ------ Counter ------
+  const counter = (function () {
+    let count = 0;
+    return {
+      increment() {
+        count++
+      },
+      decrement() {
+        count--
+      },
+      print() {
+        return count
+      }
+    }
+  })();
+  counter.increment();
+  counter.increment();
+  counter.decrement();
+  counter.increment();
+  console.log(`Counter --->> ${counter.print()}`);
+  // end ------ Counter ------
+
+
+  // start ------ Object ------
+  const somchai = {
+    height: 171,
+    weight: 70,
+    getBmi: function () {
+      return this.weight / Math.pow(this.height / 100, 2)
+    },
+  };
+
+  console.log(`Object --->> ${somchai.getBmi()}`);
+  // end ------ Object ------
+
+
+  // start ------ Spread and Rest Operators ------
+  const spreadObj1 = [1, 2, 3];
+  const spreadObj2 = [2, 3, 4];
+  const newSpreadObj = [...spreadObj1, ...spreadObj2];
+  console.log(`Spread --->> ${newSpreadObj}`);
+
+  function restOperators(...array) {
+    console.log(`Rest Operators --->> ${array}`);
+  }
+
+  restOperators(1, 2, 3, 4);
+  // end ------ Spread and Rest Operators ------
+
+
+  // start ------ Destructuring ------
+  const somsri = {
+    name: {
+      firstname: 'Somsri',
+      lastname: 'Haha',
+    },
+    age: 22,
+    gender: 'female',
+  };
+  const {age, gender, name: {firstname, lastname}} = somsri;
+  console.log(`Destructuring --->> fullname=${firstname} ${lastname}: age=${age}: gender=${gender}`);
+  // end ------ Destructuring ------
+
+
+  // start ------ Class ------
+  class Human {
+    constructor(name) {
+      this.name = name;
+    }
+
+    printName() {
+      console.log(`Class --->> ${this.name}`);
+    }
+  }
+
+  const man = new Human('Freedom');
+  man.printName();
+
+  class Woman extends Human {
+    constructor(name) {
+      super(name)
+    }
+
+    pregnant() {
+      console.log(`Class --->> extends pregnent`)
+    }
+  }
+
+  const woman = new Woman('Somsri');
+  woman.printName();
+  woman.pregnant();
+  // end ------ Class ------
+
+
+  // start ------ Composition over inheritance ------
+  /*const Walkable = {
+    walk() {
+      console.log("I'm walking.");
+    }
+  };
+  const Printable = {
+    print() {
+      console.log(this.name);
+    }
+  };
+  const Barkable = {
+    bark() {
+      console.log('Boo')
+    }
+  };
+  const Dog = name => ({
+    name,
+    ...Printable,
+    ...Walkable,
+    ...Barkable,
+  });
+
+  const dog = new Dog('Fanta');
+  dog.print();
+  dog.bark();
+  dog.walk();*/
+  // end ------ Composition over inheritance ------
+
+
+  // start ------ Data transformation ------
+  const students = [
+    {id: 1, advisorId: 1},
+    {id: 2, advisorId: 2},
+    {id: 3, advisorId: 3},
+    {id: 4, advisorId: 1},
+    {id: 5, advisorId: 3},
+  ];
+
+  console.log(students.map(student =>
+    student.advisorId === 1
+      ? {...student, advisorId: 2}
+      : student
+  ));
+
+  console.log(students.filter(student => student.advisorId === 1));
+
+  const nums = [1, 2, 3, 4, 5];
+  console.log(`Data transformation << find >> คือหาค่าแรกที่เจอ % 2 === 0 --->> ${nums.find(num => num % 2 === 0)}`);
+  console.log(`Data transformation << findIndex >> คือหาตำแหน่งแรกที่เจอ % 2 === 0 --->> ${nums.findIndex(num => num % 2 === 0)}`);
+  console.log(`Data transformation << reduce >> ผลรวมของทั้ง array --->> ${nums.reduce((result, num) => result + num)}`);
+  console.log(`Data transformation << reduceRight >> ผลรวมของทั้ง array จากขวามาซ้าย --->> ${nums.reduceRight((result, num) => result + num)}`);
+  // end ------ Data transformation ------
+
+
+  // start ------ Higher order function ------
+  const log = level => message => {
+    console.log(`Higer order function --->> ${level} : ${message}`);
+  };
+  const debuglog = log('error');
+  debuglog('Test');
+  // end ------ Higher order function ------
+
+
+  // start ------ Composition ------
+  const compose = (...fns) => (
+    arg => fns.reduce(
+      (composed, fn) => fn(composed), arg
+    )
+  );
+  const title = 'Introduction to Javascript';
+  const lowercase = title => title.toLowerCase();
+  const dasherize = title => title.replace(/ +/g, '-');
+  const uppercase = title => title.toUpperCase();
+  console.log('Composition --->> ' + compose(
+    lowercase,
+    dasherize,
+    uppercase,
+  )(title));
+  // end ------ Composition ------
+
+
+  // start ------ Recursion ------
+  function factorial(x) {
+    return (x > 0) ? x * factorial(x - 1) : 1
+  }
+
+  console.log('Recursion --->> ' + factorial(5));
+  // end ------ Recursion ------
+
+
+  // start ------ Tail call optimization ------
+  const factorial2 = (n, p = 1) => (
+    (n <= 1) ? p : factorial2(n - 1, n * p)
+  );
+  console.log(`Tail call optimization --->> ${factorial2(5)}`);
+  // end ------ Tail call optimization ------
+
+
+  // start ------ Lab 1 ------
+  console.log('1. อาศัยกลไกของ Functional Programming จงเขียนฟังก์ชันชื่อ uniq เพื่อคืนค่ากลับเป็นอาร์เรย์ที่ไม่มีข้อมูลซ้ำกัน ฟังก์ชันดังกล่าวต้องรับพารามิเตอร์เข้ามาเป็นอาร์เรย์ ดังนี้');
+  console.log('uniq([1, 2, 2, 1, 4]) // ผลลัพธ์คือ [1, 2, 4]');
+  const uniq = array => (
+    array.reduce((result, arr) =>
+        !result.includes(arr)
+          ? [...result, arr]
+          : result
+      , [])
+  );
+  console.log(uniq([1, 2, 2, 1, 4]));
+  // end ------ Lab 1 ------
+
+
+  // start ------ Lab 2 ------
+  console.log('2. concatAll คือฟังก์ชันที่เอาไว้รวมอาร์เรย์ย่อย (sub array)ที่อยู่ในอาร์เรย์หลักเข้าด้วยกัน โดย element ต่างๆใน sub array จะถูกรวมเข้าไปในอาร์เรย์หลักในระดับชั้นเดียว พิจารณาการใช้งาน concatAll ต่อไปนี้');
+  console.log('concatAll([ [1,2,3], [4,5,6], [7,8,9] ]) // [1, 2, 3, 4, 5, 6, 7, 8, 9]\n' +
+    '\n' +
+    'concatAll([ [1, [2, 3]], [4, 5] ]) // [1, [2, 3], 4, 5]');
+
+  const concatAll = array => (
+    array.reduce(
+      (result, arr) => (
+        [...result, ...arr]
+      ), []
+    )
+  );
+  console.log(concatAll([[1, 2, 3], [4, 5, 6], [7, 8, 9]]));
+  console.log(concatAll([[1, [2, 3]], [4, 5]]));
+  // end ------ Lab 2 ------
+
+
+  // start ------ Lab 3 ------
+  console.log('3. พิจารณาอ็อบเจ็กต์ต่อไปนี้ ใช้ Map/Reduce เพื่อดึง ID ของภาพยนตร์ทั้งหมดที่มี rating เป็น 5 โดยผลลัพธ์ที่ได้ต้องเป็น [654356453, 675465] ทั้งนี้ในทุกขั้นตอนของการหาและเข้าถึง ID ต้องห้ามแก้หรือเปลี่ยนแปลงข้อมูลของ movieLists และห้ามสร้างตัวแปรขึ้นมาระหว่างการทำงานทั้งสิ้น');
+  const movieLists = [{
+    name: "New Releases",
+    videos: [{
+      "id": 70111470,
+      "title": "Die Hard",
+      "rating": 4.0
+    }, {
+      "id": 654356453,
+      "title": "Bad Boys",
+      "rating": 5.0
+    }]
+  }, {
+    name: "Dramas",
+    videos: [{
+      "id": 65432445,
+      "title": "The Chamber",
+      "rating": 4.0
+    }, {
+      "id": 675465,
+      "title": "Fracture",
+      "rating": 5.0
+    }]
+  }];
+
+  console.log(
+    movieLists.reduce(
+      (result, movie) =>
+        [...result, ...movie.videos]
+      , [])
+      .filter(movie => movie.rating === 5)
+      .map(movie => movie.id)
+  );
+  // end ------ Lab 3 ------
+
+
+  // start ------ Lab 4 ------
+  console.log('4. จงสร้างฟังก์ชันชื่อ dropWhile ผ่านกลไกของ functional programming โดย dropWhile จะรับพารามิเตอร์สองตัว ตัวแรกคืออาร์เรย์ ตัวที่สองคือฟังก์ชันเงื่อนไข หากอีลีเมนต์ตัวไหนของอาร์เรย์ตรงกับเงื่อนไข dropWhile จะลบค่านั้นออกจากผลลัพธ์ที่จะคืนกลับออกจากฟังก์ชัน');
+  const users = [
+    { user: 'barney',  active: false },
+    { user: 'fred',    active: false },
+    { user: 'pebbles', active: true }
+  ];
+
+  const dropWhile = (array, condition) => (
+    array.filter(arr => !condition(arr))
+  );
+  console.log(dropWhile(users, (element) => !element.active));
+  // end ------ Lab 4 ------
+</script>
+</body>
+</html>
